@@ -1,12 +1,10 @@
 const express = require('express');
-const mongoose = require('mongoose');   // <-- Add this
-require('dotenv').config();             // <-- Add this
-
 const app = express();
 const port = 3000;
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/professionalsDB';  // <-- Add this
-
+const mongoose = require('mongoose'); 
+require('dotenv').config();
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/professionalsDB'; // Use the environment variable or fallback to local MongoDB
 // Connect to MongoDB
 mongoose.connect(MONGO_URI)
 .then(() => console.log("Connected to MongoDB"))

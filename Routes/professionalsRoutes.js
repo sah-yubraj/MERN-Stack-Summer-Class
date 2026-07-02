@@ -1,18 +1,19 @@
 const express = require('express');
 const professionals = require('../Data/professionals');
 const router = express.Router();
+const Professional = require('../models/Professional');
 
-
-// ;liddleware to parse JSON request bodies
+// middleware to parse JSON request bodies
 router.use(express.json());
 
-router.get('/', (req, res) => {
+router.get('/',async  (req, res) => {
+  const professionals = await Professional.find();
   res.json(professionals);
 });
 
-router.get('/:id', (req, res) => {
-  const professionalId = parseInt(req.params.id);
-  const professional = professionals.find(p => p.id === professionalId);
+router.get('/:id', async (req, res) => {
+  const professionalId = req.params.id;
+  const professional = await Professional.findById(professionalId);
 
   if (!professional) {
     return res.status(404).json({ error: 'Professional not found' });
@@ -21,19 +22,21 @@ router.get('/:id', (req, res) => {
   res.json(professional);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async  (req, res) => {
   if (!req.body.name || !req.body.category) {
     return res.status(400).json({ error: 'Name and category are required' });
   }
 
   const newProfessional = {
-    id: professionals.length + 1,
     name: req.body.name,
     category: req.body.category,
+    tags: req.body.tags || [],
+    isActive: req.body.isActive ?? true,
   };
 
-  professionals.push(newProfessional);
-  res.status(201).json(newProfessional);
+  
+  const professional = await Professional.create(newProfessional);
+  res.status(201).json(professional);
 });
 
 router.put('/', (req, res) => {
