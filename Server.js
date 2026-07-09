@@ -12,6 +12,13 @@ mongoose.connect(MONGO_URI)
 
 app.use(express.json());
 
+
+const authController = require('./Controllers/authController');
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+// app.post('/api/login', authController.loginUser);
+
+
 // Import professionals routes
 const professionalsRoutes = require('./Routes/professionalsRoutes');
 app.use('/api/professionals', professionalsRoutes);
